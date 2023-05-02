@@ -1,20 +1,16 @@
 //mason 2/6 project 1
 
 //import java.sql.SQLOutput;
-/*Modify your code from Project 2 so that the class representing tasks implements
-the appropriate interface allowing tasks to be sorted based first on
-their priority than on their name.  If two tasks have different priorities,
-the task with the greater priority appears before the other task.  If two
-tasks have the same priority, then the task whose name would appear first
-alphabetically appears before the other task.  If two tasks have the same
-priority and their names are the same, then they are "equal" with regard to
-the comparison.
+/*Modify your code from project 3 to support saving and loading task data to/from a file.
+ The program should try to load the task data when the program starts and save the task
+ data when the user decides to exit the program. Task information should be stored in the
+ file as JSON data. For example, the file data representing two tasks might appear as follows:*/
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-Additionally, modify the code from Project 2 to include a custom class
-representing a collection of tasks.  This class should implement the
-appropriate interface so that a for-each loop can be used to iterate through
-all the tasks.  The order in which the tasks are returned for the for-each loop
-is up to you.*/
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +19,22 @@ import java.util.Scanner;
 public class Main {
 
     static ArrayList<Task> myList = new ArrayList<>();
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        ObjectMapper map= new ObjectMapper();
+        System.out.println("Reader time!");
+        File file =new File("data.json");
+        BufferedReader br= new BufferedReader(new FileReader(file));
+        String st;
+        String total="";
+        while((st=br.readLine())!=null){
+            total=total+st;
+        }
+        System.out.println(total);
+        ArrayList<Task> myList=map.readValue(total,ArrayList.class);
+        System.out.println("reading in values!");
+        for (int i = 0; i < myList.toArray().length; i++) {
+            System.out.println(myList.get(i));
+        }
 
         Scanner input = new Scanner(System.in);
 
@@ -38,13 +49,9 @@ public class Main {
 
 
         try{
-
             int userInput = input.nextInt();
             input.nextLine();
             while (true) {
-
-
-
             if (userInput == 1) {
                 addTask(myList);
             } else if (userInput == 2) {
@@ -57,9 +64,9 @@ public class Main {
                 listprio(myList);
             } else if (userInput == 0) {
                 System.out.println("you have exited");
+                map.writeValue(new File("data.json"),myList);
                 System.exit(0);
             }
-
             System.out.println("type 1 to add a task");
             System.out.println("type 2 to remove a task");
             System.out.println("type 3 to update a task");
@@ -69,15 +76,15 @@ public class Main {
             System.out.println("please make a selection");
             userInput = input.nextInt();
             input.nextLine();
-
-
-
         }
+
+
         }
         catch(Exception e){
 
                 System.out.println("something went wrong");
             }
+
 
     }
 
