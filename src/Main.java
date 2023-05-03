@@ -5,6 +5,7 @@
  The program should try to load the task data when the program starts and save the task
  data when the user decides to exit the program. Task information should be stored in the
  file as JSON data. For example, the file data representing two tasks might appear as follows:*/
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.BufferedReader;
@@ -30,7 +31,8 @@ public class Main {
             total=total+st;
         }
         System.out.println(total);
-        ArrayList<Task> myList=map.readValue(total,ArrayList.class);
+        ArrayList<Task> myList=map.readValue(total, new TypeReference<ArrayList<Task>>() {});
+        //Collections.sort(myList);
         System.out.println("reading in values!");
         for (int i = 0; i < myList.toArray().length; i++) {
             System.out.println(myList.get(i));
@@ -48,10 +50,11 @@ public class Main {
         System.out.println("please make a selection");
 
 
-        try{
+
             int userInput = input.nextInt();
             input.nextLine();
             while (true) {
+
             if (userInput == 1) {
                 addTask(myList);
             } else if (userInput == 2) {
@@ -61,6 +64,7 @@ public class Main {
             } else if (userInput == 4) {
                 listTask(myList);
             } else if (userInput == 5) {
+
                 listprio(myList);
             } else if (userInput == 0) {
                 System.out.println("you have exited");
@@ -79,11 +83,8 @@ public class Main {
         }
 
 
-        }
-        catch(Exception e){
 
-                System.out.println("something went wrong");
-            }
+
 
 
     }
@@ -132,7 +133,7 @@ public class Main {
     }
 
     static void listTask(ArrayList<Task> a) {
-        Collections.sort(a);
+        //Collections.sort(a);
         System.out.println("your tasks are " + a);
     }
 
@@ -151,6 +152,9 @@ public class Main {
 }
 
 class Task implements Comparable<Task>,Iterable<Task> {
+    public Task(){
+        super();
+    }
     private String title;
     private String desc;
     private int priority;
